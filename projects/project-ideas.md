@@ -154,3 +154,63 @@ We are experimenting with zkVMs (zero-knowledge virtual machines) to enable prov
 By Saulius Grigaitis
 
 Grandine’s documentation requires a comprehensive refresh and expansion. This project is ideal for contributors who want to gain a deep understanding of Grandine’s architecture, features, and workflows while improving the developer and operator experience through clear, comprehensive, and up-to-date documentation.
+
+### Pureth: SSZ Execution Blocks
+
+By Etan Kissling and Tamaghna Choudhuri
+
+Pureth aims to make Ethereum execution-layer data easier to access, verify, and consume without requiring trust in centralized RPC providers or third-party indexing services. By moving the Execution Layer toward SSZ-native data structures and proof-friendly serialization, Pureth enables more efficient and trust-minimized access to Ethereum state and historical data.
+
+This cohort focuses on expanding SSZ support across Execution Layer clients beyond Nimbus. The initial phase of the project involves implementing foundational SSZ support within EL clients and their associated serialization libraries. This includes adding support for EIP-7688 progressive SSZ types and implementing RLP-to-SSZ transformations for core execution-layer objects such as block hashes, transactions, receipts, and withdrawals.
+
+Follow-up work will explore deeper protocol integration, including SSZ-native transaction gossip protocols (SSZx), broader SSZification of execution-layer networking and storage, serving SSZ proofs alongside RPC responses, and additional proof-friendly execution-layer data structures. The long-term goal is to move the Ethereum Execution Layer toward a fully SSZ-native architecture capable of efficient light-client verification, provable RPC responses, and trust-minimized application infrastructure.
+
+### Pureth: Trustless Log Index
+
+By Etan Kissling and Tamaghna Choudhuri
+
+The other major component of Pureth focuses on execution-layer logging improvements, centered around the [Trustless Log Index (EIP-7745)](https://eips.ethereum.org/EIPS/eip-7745). This project aims to implement the [7745b proposal](https://gist.github.com/zsfelfoldi/73d9053f75c28a8461d13e0b61a58f1c) within Execution Layer clients, enabling efficient and provable log querying without reliance on external indexing infrastructure.
+
+The final objective of the project is to deploy an interoperable devnet demonstrating compatibility between Geth and Nimbus implementations.
+
+### SSZ Query Language for the Consensus and Execution Layers
+
+By Etan Kissling and Tamaghna Choudhuri
+
+As a follow-up to Pureth, this project explores the design and implementation of a generalized SSZ query language for both the Consensus Layer and Execution Layer. The goal is to enable efficient, proof-friendly querying of arbitrary SSZ trees, allowing clients and applications to request only the exact subset of Ethereum data they require.
+
+The query language would support features such as field selection, filtering, range queries, anchored Merkle proofs, and partial tree extraction. Queries would be executed against SSZ-backed structures such as beacon states, execution payloads, receipts, transactions, validator registries, and future SSZ-native execution-layer objects.
+
+Example query structure:
+
+```json
+{
+  "anchor": "<stateRoot>",
+  "querySpec": {
+    "validators": {
+      "range": [0, 100],
+      "filter": {
+        "slashed": true,
+        "effective_balance": {
+          "gte": 32
+        }
+      },
+      "fields": [
+        "effective_balance",
+        "withdrawal_credentials"
+      ]
+    }
+  },
+  "includeProof": true
+}
+```
+
+The long-term vision is to provide a unified, proof-oriented query interface across Ethereum, enabling light clients, wallets, rollups, bridges, and decentralized applications to retrieve minimal subsets of Consensus Layer and Execution Layer data together with verifiable Merkle proofs. This aligns closely with Pureth’s broader goal of moving Ethereum toward trust-minimized, SSZ-native infrastructure and provable RPC interactions.
+
+A strong implementation target for this project would be the Nimbus Unified Client. Since it combines both the Consensus Layer and Execution Layer into a single executable, it provides a natural environment for exposing a unified SSZ query interface capable of serving both CL and EL data through a shared proof-oriented API.
+
+Relevant references:
+
+* [EPF Project Idea: Prysm SSZ Query Language](https://github.com/eth-protocol-fellows/cohort-six/blob/master/projects/project-ideas.md#prysm-ssz-query-language)
+* [SSZ Query Language with Merkle Proofs](https://github.com/eth-protocol-fellows/cohort-six/blob/master/projects/ssz-ql-with-merkle-proofs.md.com)
+* [Electra Light Client Notes – SSZ Query Language](https://hackmd.io/@etan-status/electra-lc#SSZ-query-language)
